@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'agent1' }
+    agent { label 'docker-agent' }
 
     stages {
         stage('Checkout') {
@@ -11,7 +11,11 @@ pipeline {
 
         stage('Build Maven') {
             steps {
-                sh 'mvn clean package'
+                script {
+                    docker.image('maven:3.9.8-eclipse-temurin-17').inside {
+                        sh 'mvn clean package'
+                    }
+                }
             }
         }
 
